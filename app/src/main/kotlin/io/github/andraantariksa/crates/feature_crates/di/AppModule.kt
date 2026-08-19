@@ -33,6 +33,7 @@ val appModule = module {
     single {
         Room
             .databaseBuilder(get(), CratesDatabase::class.java, CratesDatabase.NAME)
+            .fallbackToDestructiveMigration()
             .build()
     }
 
@@ -52,7 +53,7 @@ val appModule = module {
     }
 
     single<CratesIoDataSourceLocal> {
-        CratesIoDataSourceLocalImpl()
+        CratesIoDataSourceLocalImpl(cratesDatabase = get())
     }
 
     single {

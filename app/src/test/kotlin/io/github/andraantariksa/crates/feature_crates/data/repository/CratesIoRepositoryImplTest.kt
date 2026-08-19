@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import io.github.andraantariksa.crates.feature_crates.data.exception.NoCachedDataException
 import io.github.andraantariksa.crates.feature_crates.data.exception.NoNetworkException
 import io.github.andraantariksa.crates.feature_crates.data.source.local.CratesIoDataSourceLocal
+import io.github.andraantariksa.crates.feature_crates.data.source.remote.CratesIoDataSourceRemote
 import io.github.andraantariksa.crates.feature_crates.data.source.remote.model.summary.CratesSummary
 import kotlinx.coroutines.runBlocking
 import okio.IOException

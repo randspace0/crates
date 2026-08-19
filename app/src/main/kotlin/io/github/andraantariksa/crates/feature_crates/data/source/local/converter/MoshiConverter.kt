@@ -2,12 +2,13 @@ package io.github.andraantariksa.crates.feature_crates.data.source.local.convert
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
-import io.github.andraantariksa.crates.feature_crates.data.source.local.model.crates_summary.CratesSummaryEntity
+import io.github.andraantariksa.crates.feature_crates.data.source.remote.model.detail.CrateDetail
 import io.github.andraantariksa.crates.feature_crates.data.source.remote.model.summary.CratesSummary
 
 class MoshiConverter {
-    lateinit var moshi: Moshi
+    private val moshi = Moshi.Builder().build()
     private val cratesSummaryAdapter = moshi.adapter(CratesSummary::class.java)
+    private val crateDetailAdapter = moshi.adapter(CrateDetail::class.java)
 
     @TypeConverter
     fun stringToCratesSummary(string: String): CratesSummary {
@@ -15,7 +16,17 @@ class MoshiConverter {
     }
 
     @TypeConverter
-    fun cratesSummaryToString(cratesSummaryEntity: CratesSummary): String {
-        return cratesSummaryAdapter.toJson(cratesSummaryEntity)
+    fun cratesSummaryToString(cratesSummary: CratesSummary): String {
+        return cratesSummaryAdapter.toJson(cratesSummary)
+    }
+
+    @TypeConverter
+    fun stringToCrateDetail(string: String): CrateDetail {
+        return crateDetailAdapter.fromJson(string) ?: throw IllegalStateException()
+    }
+
+    @TypeConverter
+    fun crateDetailToString(crateDetail: CrateDetail): String {
+        return crateDetailAdapter.toJson(crateDetail)
     }
 }

@@ -17,7 +17,9 @@ class CratesIoRepositoryImpl @Inject constructor(
 ) : CratesIoRepository {
     override suspend fun getCratesSummary(): Result<CratesSummary> {
         var result = try {
-            Result.success(cratesIoDatasourceRemote.getCratesSummary())
+            Result.success(cratesIoDatasourceRemote.getCratesSummary().also {
+                cratesIoDatasourceLocal.saveCratesSummary(it)
+            })
         } catch (exception: NoNetworkException) {
             Result.failure(exception)
         } catch (exception: Exception) {
@@ -38,9 +40,11 @@ class CratesIoRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun getCrateDetails(id: Int): Result<CrateDetail> {
+    override suspend fun getCrateDetails(id: String): Result<CrateDetail> {
         var result = try {
-            Result.success(cratesIoDatasourceRemote.getCrateDetail(id))
+            Result.success(cratesIoDatasourceRemote.getCrateDetail(id).also {
+                cratesIoDatasourceLocal.saveCrateDetails(id, it)
+            })
         } catch (exception: NoNetworkException) {
             Result.failure(exception)
         } catch (exception: Exception) {
@@ -49,7 +53,7 @@ class CratesIoRepositoryImpl @Inject constructor(
 
         if (result.isFailure) {
             try {
-                result = Result.success(cratesIoDatasourceRemote.getCrateDetail(id))
+                result = Result.success(cratesIoDatasourceLocal.getCrateDetails(id))
             } catch (exception: NoCachedDataException) {
 //                Its better to just show network failure when there is no cached data
 //                Result.failure(exception)

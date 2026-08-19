@@ -27,30 +27,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import io.github.andraantariksa.crates.common.util.CratesResult
+import io.github.andraantariksa.crates.feature_crates.data.source.remote.model.detail.CrateDetail
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CrateScreen(crateId: String?, crateViewModel: CrateViewModel = koinViewModel()) {
-    LaunchedEffect(Unit) {
+    LaunchedEffect(crateId) {
         crateViewModel.load(crateId)
     }
 
-    Crate(example)
+    when (val state = crateViewModel.crateDetail) {
+        is CratesResult.Loading -> Crate(CrateDetail.EXAMPLE)
+        is CratesResult.Error -> Text("Error: ${state.error.message}")
+        is CratesResult.Loaded -> Crate(state.data)
+    }
 }
-
-data class CrateExample(
-    val title: String,
-    val version: String,
-    val description: String,
-    val tags: List<String>
-)
-
-val example = CrateExample(
-    "Register",
-    "v1.0.2",
-    "Common interface for MMIO and CPU registers",
-    listOf("cpu", "embedded", "bare-metal", "registers", "mmio")
-)
 
 enum class CrateTabs {
     Readme,
@@ -62,10 +54,12 @@ enum class CrateTabs {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun Crate(
-    crate: CrateExample
+    crateDetail: CrateDetail
 ) {
     val context = LocalContext.current
     val pagerState = rememberPagerState(pageCount = { 4 })
+    val crate = crateDetail.crate
+    val latestVersion = crateDetail.versions.firstOrNull()
 
     Scaffold(
         topBar = {
@@ -73,8 +67,8 @@ fun Crate(
                 title = {
                     Column {
                         Row {
-                            Text(crate.title)
-                            Text(crate.version)
+                            Text(crate.name)
+                            Text(crate.maxVersion)
                         }
                         Text(
                             crate.description,
@@ -100,7 +94,7 @@ fun Crate(
         ) {
             HorizontalPager(state = pagerState) { page ->
                 when (page) {
-                    0 -> Readme()
+                    0 -> Readme(latestVersion)
                     else -> {}
                 }
             }
@@ -111,17 +105,18 @@ fun Crate(
 @Preview
 @Composable
 fun CratePreview() {
-    Crate(example)
+    Crate(CrateDetail.EXAMPLE)
 }
 
 @Composable
-fun Readme() {
+fun Readme(version: io.github.andraantariksa.crates.feature_crates.data.source.remote.model.detail.Version?) {
     Column {
+        // ponytail: README markdown needs a separate fetch of version.readmePath; add when the tab is prioritized
         AndroidView(
             modifier = Modifier.fillMaxSize(),
             factory = {
                 TextView(it).apply {
-                    text = "Thumbs"
+                    text = "README not loaded yet"
                 }
             },
             update = {
@@ -136,18 +131,18 @@ fun Readme() {
                 imageVector = Icons.Default.CalendarMonth,
                 contentDescription = null
             )
-            Text("about 3 years ago")
+            Text(version?.updatedAt ?: "-")
         }
         Row {
             Icon(imageVector = Icons.Default.Balance, contentDescription = null)
-            Text("MIT or Apache-2.0")
+            Text(version?.license ?: "-")
         }
         Row {
             Icon(
                 imageVector = Icons.Default.AddToQueue,
                 contentDescription = null
             )
-            Text("8.6 KiB")
+            Text(version?.crateSize?.let { "$it bytes" } ?: "-")
         }
     }
 }
@@ -155,5 +150,5 @@ fun Readme() {
 @Preview
 @Composable
 fun PreviewReadme() {
-    Readme()
+    Readme(null)
 }

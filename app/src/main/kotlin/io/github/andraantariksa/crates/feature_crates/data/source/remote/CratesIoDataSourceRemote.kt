@@ -8,7 +8,7 @@ import io.github.andraantariksa.crates.feature_crates.domain.entity.summary.Crat
 
 interface CratesIoDataSourceRemote {
     suspend fun getCratesSummary(): CratesSummary
-    suspend fun getCrateDetail(id: Int): CrateDetail
+    suspend fun getCrateDetail(id: String): CrateDetail
     suspend fun getBeginAuthData(): AuthBegin
     suspend fun authorizeOauth(code: String, state: String): MyUser
     suspend fun getMe(): Result<MyUser>

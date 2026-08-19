@@ -37,7 +37,7 @@ class CratesIoDataSourceRemoteImplTest {
     @Test
     fun `getCratesDetail should forward to cratesIoAPIService getCratesDetail`() = runBlocking {
         val crateDetail = CrateDetail.EXAMPLE
-        val crateId = crateDetail.crate.id.toInt()
+        val crateId = crateDetail.crate.id
         whenever(cratesIoAPIService.getCrateDetail(crateId)).thenReturn(crateDetail)
 
         val result = cratesIoDatasourceRemoteImpl.getCrateDetail(crateId)
