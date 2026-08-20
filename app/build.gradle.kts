@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
+    namespace = "io.github.andraantariksa.crates"
     compileSdkVersion = "android-34"
-    buildToolsVersion = "30.0.3"
 
     defaultConfig {
         applicationId = "io.github.andraantariksa.crates"
@@ -30,6 +30,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     composeOptions {
@@ -37,8 +38,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = "11"
     }
 
     testOptions {
@@ -90,7 +95,7 @@ dependencies {
     ksp("androidx.room:room-compiler:$roomVersion")
 
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
-    testImplementation("org.robolectric:robolectric:4.8.1")
+    testImplementation("org.robolectric:robolectric:4.11.1")
     testImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("com.google.truth:truth:1.1.3")
 

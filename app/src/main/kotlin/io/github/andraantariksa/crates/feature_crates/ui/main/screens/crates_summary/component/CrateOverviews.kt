@@ -30,7 +30,7 @@ fun CrateOverviews(title: String, crates: List<Crate>? = null) {
                 .padding(vertical = 2.dp)
         ) {
             if (crates != null) {
-                crates.forEach { item ->
+                for (item in crates) {
                     CrateOverview(item) {
                         context.startActivity(
                             CrateActivity.init(context, item.id)

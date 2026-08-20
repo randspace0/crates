@@ -4,12 +4,15 @@ import com.google.common.truth.Truth.assertThat
 import io.github.andraantariksa.crates.feature_crates.data.exception.NoCachedDataException
 import io.github.andraantariksa.crates.feature_crates.data.exception.NoNetworkException
 import io.github.andraantariksa.crates.feature_crates.data.source.local.CratesIoDataSourceLocal
+import io.github.andraantariksa.crates.feature_crates.data.source.remote.CratesIoDataSourceRemote
 import io.github.andraantariksa.crates.feature_crates.data.source.remote.model.summary.CratesSummary
 import kotlinx.coroutines.runBlocking
 import okio.IOException
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.koin.core.context.stopKoin
 import org.mockito.Mockito.times
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -31,6 +34,11 @@ class CratesIoRepositoryImplTest {
                 cratesIoDatasourceRemote = cratesIoDatasourceRemote,
                 cratesIoDatasourceLocal = cratesIoDatasourceLocal
             )
+    }
+
+    @After
+    fun tearDown() {
+        stopKoin()
     }
 
     @Test

@@ -5,5 +5,7 @@ import io.github.andraantariksa.crates.feature_crates.domain.entity.summary.Crat
 
 interface CratesIoDataSourceLocal {
     suspend fun getCratesSummary(): CratesSummary
-    suspend fun getCrateDetails(id: Int): CrateDetail
+    suspend fun saveCratesSummary(cratesSummary: CratesSummary)
+    suspend fun getCrateDetails(id: String): CrateDetail
+    suspend fun saveCrateDetails(id: String, crateDetail: CrateDetail)
 }

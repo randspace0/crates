@@ -16,7 +16,7 @@ class CratesIoDataSourceRemoteImpl
 ) : CratesIoDataSourceRemote {
     override suspend fun getCratesSummary(): CratesSummary = cratesIoAPIService.getSummary()
 
-    override suspend fun getCrateDetail(id: Int): CrateDetail =
+    override suspend fun getCrateDetail(id: String): CrateDetail =
         cratesIoAPIService.getCrateDetail(id)
 
     override suspend fun getBeginAuthData(): AuthBegin = cratesIoAPIService.getBeginAuthData()

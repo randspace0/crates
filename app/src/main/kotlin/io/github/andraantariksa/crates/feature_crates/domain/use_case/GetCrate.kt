@@ -6,5 +6,5 @@ import io.github.andraantariksa.crates.feature_crates.domain.repository.CratesIo
 class GetCrate(
     private val repository: CratesIoRepository
 ) {
-    suspend operator fun invoke(id: Int): Result<CrateDetail> = repository.getCrateDetails(id)
+    suspend operator fun invoke(id: String): Result<CrateDetail> = repository.getCrateDetails(id)
 }
