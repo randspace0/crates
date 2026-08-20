@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
+    namespace = "io.github.andraantariksa.crates"
     compileSdkVersion = "android-34"
-    buildToolsVersion = "30.0.3"
 
     defaultConfig {
         applicationId = "io.github.andraantariksa.crates"
