@@ -17,7 +17,7 @@ data class Version(
     @Json(name = "dl_path")
     val dlPath: String,
     @Json(name = "downloads")
-    val downloads: Int,
+    val downloads: Long,
     @Json(name = "features")
     val features: Features,
     @Json(name = "id")

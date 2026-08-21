@@ -18,7 +18,7 @@ data class NewCrate(
     @Json(name = "documentation")
     val documentation: Any?,
     @Json(name = "downloads")
-    val downloads: Int,
+    val downloads: Long,
     @Json(name = "exact_match")
     val exactMatch: Boolean,
     @Json(name = "homepage")
@@ -38,7 +38,7 @@ data class NewCrate(
     @Json(name = "newest_version")
     val newestVersion: String,
     @Json(name = "recent_downloads")
-    val recentDownloads: Int?,
+    val recentDownloads: Long?,
     @Json(name = "repository")
     val repository: String?,
     @Json(name = "updated_at")

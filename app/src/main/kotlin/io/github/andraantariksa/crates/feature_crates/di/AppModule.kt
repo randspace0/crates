@@ -59,6 +59,13 @@ val appModule = module {
     single {
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(ConnectivityInterceptor(get()))
+            .addInterceptor { chain ->
+                chain.proceed(
+                    chain.request().newBuilder()
+                        .header("User-Agent", "crates (https://github.com/randspace0/crates)")
+                        .build()
+                )
+            }
             .cookieJar(PersistedCookieJar(cookieRepository = get()))
             .build()
 
