@@ -17,7 +17,7 @@ data class Crate(
     @Json(name = "documentation")
     val documentation: Any,
     @Json(name = "downloads")
-    val downloads: Int,
+    val downloads: Long,
     @Json(name = "exact_match")
     val exactMatch: Boolean,
     @Json(name = "homepage")

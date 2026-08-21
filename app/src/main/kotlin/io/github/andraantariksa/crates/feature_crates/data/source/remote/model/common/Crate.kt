@@ -6,7 +6,7 @@ data class Crate(
         val created_at: String,
         val description: String,
         val documentation: String?,
-        val downloads: Int,
+        val downloads: Long,
         val exact_match: Boolean,
         val homepage: String,
         val id: String,
@@ -16,7 +16,7 @@ data class Crate(
         val max_version: String,
         val name: String,
         val newest_version: String,
-        val recent_downloads: Int,
+        val recent_downloads: Long,
         val repository: String,
         val updated_at: String,
         val versions: List<Int>

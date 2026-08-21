@@ -27,6 +27,7 @@ class CratesSummaryViewModel(
 
     private fun loadCratesSummary() = viewModelScope.launch {
         val result = cratesIoRepository.getCratesSummary()
+        result.exceptionOrNull()?.let { android.util.Log.e("CratesSummaryVM", "load failed", it) }
         cratesSummaryState = cratesSummaryState.copy(cratesSummary = result.toCratesResult())
     }
 }
