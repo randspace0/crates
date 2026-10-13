@@ -3,7 +3,7 @@
     uv run --with pillow tools/icon.py
 
 Writes the adaptive icon vectors into app/src/main/res/drawable and the
-store graphics into fastlane/metadata/android/en-US/images.
+store graphics into play-store.
 """
 from pathlib import Path
 
@@ -116,7 +116,7 @@ def draw_art(img, left, top, px):
 
 
 def write_store_images():
-    out = ROOT / "fastlane/metadata/android/en-US/images"
+    out = ROOT / "play-store"
     out.mkdir(parents=True, exist_ok=True)
 
     # Play icon: 512x512, full bleed; Play applies its own mask.

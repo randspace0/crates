@@ -17,8 +17,21 @@ android {
         versionName = "2.0"
     }
 
+    signingConfigs {
+        // Upload key lives outside the repo, in ~/.gradle/gradle.properties.
+        if (project.hasProperty("crates.storeFile")) {
+            create("release") {
+                storeFile = file(project.property("crates.storeFile") as String)
+                storePassword = project.property("crates.storePassword") as String
+                keyAlias = project.property("crates.keyAlias") as String
+                keyPassword = project.property("crates.keyPassword") as String
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfigs.findByName("release")?.let { signingConfig = it }
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
