@@ -38,10 +38,10 @@ uv run --with pillow tools/icon.py
 
 ### Data safety answers
 
-The app has no backend, analytics or crash reporting. Data goes only from the device to crates.io / GitHub because the user asked for it.
+The app has no backend, analytics or crash reporting. Requests go to crates.io and GitHub, plus any image hosts a README embeds, only when the user opens that screen. App data is excluded from backups and device transfers.
 
 - **Does the app collect or share user data?** Yes, minimal:
-  - *Personal info → User IDs*: the crates.io user ID and login are fetched from crates.io and **stored on device**. Purpose: App functionality. Not shared.
+  - *Personal info → User IDs*: the crates.io user ID and login are fetched from crates.io and **stored on device**. The ID is sent back to crates.io to list the user's crates. Purpose: App functionality. Not shared.
   - *App activity / Authentication*: the crates.io session cookie, sent only to crates.io.
 - **Encrypted in transit?** Yes (HTTPS only)
 - **Can users request deletion?** Yes: sign out, or clear app data / uninstall. Nothing is kept server-side by the app
