@@ -10,7 +10,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "io.github.andraantariksa.crates"
+        applicationId = "io.github.randspace0.crates"
         minSdk = 26
         targetSdk = 37
         versionCode = 2

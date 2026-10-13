@@ -115,9 +115,9 @@ The app has no backend, analytics or crash reporting. Requests go to crates.io a
 | --- | --- |
 | Target API level | ✅ targetSdk 37 (meets the current Play requirement) |
 | Android App Bundle | `./gradlew bundleRelease` → `app/build/outputs/bundle/release/app-release.aab` |
-| Upload key | ✅ `~/Key/Crates/upload.jks` (alias `upload`), outside git. Back it up. `app/build.gradle.kts` signs `release` when `crates.storeFile`, `crates.storePassword`, `crates.keyAlias`, `crates.keyPassword` are set in `~/.gradle/gradle.properties` (or CI secrets); otherwise the build is unsigned. Enroll in Play App Signing on first upload |
+| Upload key | ✅ `~/Key/Crates/upload.jks` (alias `upload`), outside git. Back it up. `app/build.gradle.kts` signs `release` when `crates.storeFile`, `crates.storePassword`, `crates.keyAlias`, `crates.keyPassword` are set in `~/.gradle/gradle.properties` (or CI secrets); otherwise the build is unsigned. Play App Signing is handled by Google, this is only the upload key |
 | versionCode / versionName | 2 / 2.0. Bump `versionCode` on every upload |
-| Package name | `io.github.andraantariksa.crates`. Permanent once published, so confirm it before the first upload |
+| Package name | `io.github.randspace0.crates` (`applicationId`; the Kotlin `namespace` stays `io.github.andraantariksa.crates`). Permanent once published |
 | R8 / minify | Off. Optional: turn on `isMinifyEnabled` for a smaller download (Moshi codegen and Retrofit ship their own keep rules) |
 | Permissions | `INTERNET` only |
 
