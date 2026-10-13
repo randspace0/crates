@@ -6,9 +6,14 @@ import coil3.SingletonImageLoader
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import com.squareup.moshi.Moshi
 import io.github.andraantariksa.crates.data.CratesApi
+import io.github.andraantariksa.crates.data.Session
+import io.github.andraantariksa.crates.data.WebViewCookieJar
+import io.github.andraantariksa.crates.ui.account.AccountViewModel
 import io.github.andraantariksa.crates.ui.crate.CrateViewModel
 import io.github.andraantariksa.crates.ui.home.HomeViewModel
+import io.github.andraantariksa.crates.ui.mycrates.MyCratesViewModel
 import io.github.andraantariksa.crates.ui.search.SearchViewModel
+import io.github.andraantariksa.crates.ui.signin.SignInViewModel
 import io.github.andraantariksa.crates.ui.theme.ThemePreference
 import okhttp3.Cache
 import okhttp3.CacheControl
@@ -26,6 +31,7 @@ val appModule = module {
     single {
         OkHttpClient.Builder()
             .cache(Cache(File(androidContext().cacheDir, "http"), 50L * 1024 * 1024))
+            .cookieJar(WebViewCookieJar())
             // crates.io asks API clients to identify themselves.
             .addInterceptor { chain ->
                 chain.proceed(
@@ -57,11 +63,15 @@ val appModule = module {
             .build()
             .create(CratesApi::class.java)
     }
+    single { Session(androidContext(), get(), get()) }
     single { ThemePreference(androidContext()) }
 
     viewModelOf(::HomeViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::CrateViewModel)
+    viewModelOf(::MyCratesViewModel)
+    viewModelOf(::AccountViewModel)
+    viewModelOf(::SignInViewModel)
 }
 
 class CratesApplication : Application() {

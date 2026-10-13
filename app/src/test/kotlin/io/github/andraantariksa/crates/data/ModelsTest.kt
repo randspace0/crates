@@ -3,6 +3,7 @@ package io.github.andraantariksa.crates.data
 import com.squareup.moshi.Moshi
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -42,5 +43,19 @@ class ModelsTest {
     fun ownersAndDependencies() {
         assertTrue(parse<Owners>("owners.json").users.isNotEmpty())
         assertTrue(parse<Dependencies>("dependencies.json").dependencies.any { it.kind == "dev" })
+    }
+
+    @Test
+    fun authorizeSignupRequiredHasNoUser() {
+        val result = moshi.adapter(AuthorizeResult::class.java).fromJson("""{"status":"signup_required"}""")!!
+        assertEquals("signup_required", result.status)
+        assertNull(result.user)
+    }
+
+    @Test
+    fun authorizeSignedInCarriesUser() {
+        val json = """{"status":"signed_in","user":{"id":1,"login":"ferris","name":null,"avatar":null,"url":null,"email":"f@example.com"},"owned_crates":[]}"""
+        val result = moshi.adapter(AuthorizeResult::class.java).fromJson(json)!!
+        assertEquals("ferris", result.user!!.login)
     }
 }

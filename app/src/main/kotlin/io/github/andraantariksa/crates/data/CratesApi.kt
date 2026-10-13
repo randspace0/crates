@@ -2,7 +2,10 @@ package io.github.andraantariksa.crates.data
 
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -43,4 +46,16 @@ interface CratesApi {
     /** Follows `meta.next_page`, which is a query string relative to `v1/crates`. */
     @GET
     suspend fun cratesPage(@Url url: String): CratesPage
+
+    @POST("private/session/begin")
+    suspend fun beginAuth(): BeginAuth
+
+    @POST("private/session/authorize")
+    suspend fun authorize(@Body body: AuthorizeBody): AuthorizeResult
+
+    @GET("v1/me")
+    suspend fun me(): Response<Me>
+
+    @DELETE("private/session")
+    suspend fun signOut(): Response<Unit>
 }

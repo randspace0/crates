@@ -114,3 +114,16 @@ data class CratesPage(
     val crates: List<Crate>,
     val meta: SearchMeta,
 )
+
+@JsonClass(generateAdapter = true)
+data class BeginAuth(val url: String, val state: String)
+
+@JsonClass(generateAdapter = true)
+data class AuthorizeBody(val code: String, val state: String)
+
+/** `status` is `signed_in` (with [user]) or `signup_required`. */
+@JsonClass(generateAdapter = true)
+data class AuthorizeResult(val status: String, val user: UserRef?)
+
+@JsonClass(generateAdapter = true)
+data class Me(val user: UserRef)
