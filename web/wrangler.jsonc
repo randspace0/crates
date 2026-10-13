@@ -1,0 +1,6 @@
+{
+  "name": "crates-web",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": ".output/public", "not_found_handling": "404-page" },
+  "routes": [{ "pattern": "crates.randspace0.com", "custom_domain": true }]
+}
