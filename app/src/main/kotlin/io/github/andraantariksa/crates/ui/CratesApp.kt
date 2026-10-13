@@ -72,7 +72,10 @@ fun CratesApp() {
                     val selected = item == currentTab
                     item(
                         selected = selected,
-                        onClick = { navController.navigateTopLevel(item.route) },
+                        onClick = {
+                            currentTab = item // the restored destination may be a sub-screen
+                            navController.navigateTopLevel(item.route)
+                        },
                         icon = { Icon(if (selected) item.selectedIcon else item.icon, contentDescription = null) },
                         label = { Text(item.label) },
                     )
