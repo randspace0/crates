@@ -4,6 +4,7 @@ import android.content.Context
 import android.webkit.CookieManager
 import androidx.core.content.edit
 import com.squareup.moshi.Moshi
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -54,8 +55,16 @@ class Session(context: Context, moshi: Moshi, private val api: CratesApi) {
     }
 
     suspend fun signOut() {
-        runCatching { api.signOut() }
-        clear()
+        // Update the UI right away; the DELETE still needs the cookie, so drop it afterwards.
+        prefs.edit { remove(KEY_USER) }
+        _user.value = null
+        try {
+            api.signOut()
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e // offline is fine: the cookie is removed below anyway
+        } finally {
+            CookieManager.getInstance().removeAllCookies(null)
+        }
     }
 
     private fun clear() {

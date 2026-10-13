@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import io.github.andraantariksa.crates.data.Crate
+import io.github.andraantariksa.crates.data.CratesPage
 import io.github.andraantariksa.crates.data.CratesApi
 import io.github.andraantariksa.crates.data.Session
 import io.github.andraantariksa.crates.data.UserRef
@@ -45,7 +45,7 @@ import org.koin.compose.viewmodel.koinViewModel
 
 class MyCratesViewModel(private val api: CratesApi, private val session: Session) : ViewModel() {
     val user = session.user
-    private val _crates = MutableStateFlow<Load<List<Crate>>>(Load.Loading)
+    private val _crates = MutableStateFlow<Load<CratesPage>>(Load.Loading)
     val crates = _crates.asStateFlow()
     private val _refreshing = MutableStateFlow(false)
     val refreshing = _refreshing.asStateFlow()
@@ -61,12 +61,14 @@ class MyCratesViewModel(private val api: CratesApi, private val session: Session
 
     // ponytail: first 100 crates only; add paging when someone owns more.
     private suspend fun fetch(user: UserRef) =
-        load { api.crates(userId = user.id, sort = "recent-updates", perPage = 100).crates }
+        load { api.crates(userId = user.id, sort = "recent-updates", perPage = 100) }
 
     fun refresh() = viewModelScope.launch {
         val user = session.user.value ?: return@launch
         _refreshing.value = true
-        _crates.value = fetch(user)
+        val result = fetch(user)
+        // Ignore the result if the user signed out or switched accounts meanwhile.
+        if (session.user.value?.id == user.id) _crates.value = result
         _refreshing.value = false
     }
 }
@@ -100,7 +102,7 @@ fun MyCratesScreen(
             when (val c = crates) {
                 Load.Loading -> LoadingBox()
                 is Load.Failed -> ErrorBox(c.error, onRetry = { viewModel.refresh() })
-                is Load.Ready -> if (c.data.isEmpty()) {
+                is Load.Ready -> if (c.data.crates.isEmpty()) {
                     MessageBox(
                         Icons.Outlined.Inventory2,
                         "No crates yet",
@@ -121,12 +123,12 @@ fun MyCratesScreen(
                             ) {
                                 Avatar(signedIn.avatar, 40.dp)
                                 Text(
-                                    "${c.data.size} crates owned by @${signedIn.login}",
+                                    "${c.data.meta.total} crates owned by @${signedIn.login}",
                                     style = MaterialTheme.typography.titleSmall,
                                 )
                             }
                         }
-                        items(c.data, key = { it.id }) {
+                        items(c.data.crates, key = { it.id }) {
                             CrateCard(it, onClick = { onCrate(it.id) }, modifier = Modifier.widthIn(max = 840.dp))
                         }
                     }
