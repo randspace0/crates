@@ -1,0 +1,32 @@
+Crates is an unofficial Android client for crates.io, the Rust community's package registry. Browse, search and read about Rust crates from your phone or tablet.
+
+EXPLORE
+• New crates, most downloaded, just updated and most recent downloads, like the crates.io home page
+• Popular keywords and categories
+• Total downloads and number of crates on the registry
+
+SEARCH
+• Search by name, keyword or category
+• Sort by relevance, all-time downloads, recent downloads, recent updates or newest
+• Keeps loading results as you scroll
+
+CRATE PAGES
+• The crate's README, readable in light and dark mode
+• Downloads, license, minimum Rust version, edition and size
+• Copy "cargo add" or the Cargo.toml line with one tap
+• Versions with dates and download counts, yanked versions marked
+• Dependencies, dev-dependencies and build-dependencies; tap one to open it
+• Owners, categories and links to the homepage, docs.rs and the repository
+
+YOUR CRATES
+• Log in with GitHub, the same way as on crates.io
+• See the crates you own
+
+MADE FOR EVERY SCREEN
+• Bottom navigation on phones, a navigation rail and side-by-side crate pages on tablets
+• Light, dark or system theme
+• Shows the last loaded pages when you are offline
+
+Crates talks to crates.io directly. There are no ads, no analytics and no servers of our own. The source code is on GitHub: https://github.com/randspace0/crates
+
+Crates is not affiliated with or endorsed by crates.io or the Rust Foundation. "Rust" and "crates.io" are trademarks of the Rust Foundation.

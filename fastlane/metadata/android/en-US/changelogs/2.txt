@@ -1,0 +1,6 @@
+Rebuilt from scratch:
+• Explore page like crates.io: new, popular and updated crates, keywords and categories
+• Search with sorting
+• Crate pages with README, versions, dependencies, owners and install snippets
+• Log in with GitHub and see your own crates
+• Tablet layout, dark mode and a new pixel-art icon
