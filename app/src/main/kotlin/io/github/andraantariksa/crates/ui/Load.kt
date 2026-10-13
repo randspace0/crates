@@ -1,6 +1,8 @@
 package io.github.andraantariksa.crates.ui
 
 import android.text.format.DateUtils
+import androidx.compose.ui.platform.UriHandler
+import kotlinx.coroutines.CancellationException
 import java.text.NumberFormat
 import java.time.Instant
 import java.util.Locale
@@ -11,8 +13,21 @@ sealed interface Load<out T> {
     data class Failed(val error: Throwable) : Load<Nothing>
 }
 
+/** Like runCatching, but lets cancellation through so a cancelled load never shows as an error. */
 suspend fun <T> load(block: suspend () -> T): Load<T> =
-    runCatching { block() }.fold({ Load.Ready(it) }, { Load.Failed(it) })
+    try {
+        Load.Ready(block())
+    } catch (e: CancellationException) {
+        throw e
+    } catch (e: Exception) {
+        Load.Failed(e)
+    }
+
+/** Opens http(s) links from crate metadata or READMEs; other schemes and missing browsers are ignored. */
+fun UriHandler.openWeb(url: String) {
+    if (!url.startsWith("https://") && !url.startsWith("http://")) return
+    runCatching { openUri(url) }
+}
 
 fun formatCount(n: Long): String = NumberFormat.getIntegerInstance().format(n)
 

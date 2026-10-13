@@ -79,6 +79,7 @@ import io.github.andraantariksa.crates.ui.SectionTitle
 import io.github.andraantariksa.crates.ui.StatText
 import io.github.andraantariksa.crates.ui.formatCompact
 import io.github.andraantariksa.crates.ui.formatCount
+import io.github.andraantariksa.crates.ui.openWeb
 import io.github.andraantariksa.crates.ui.relativeTime
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -222,7 +223,7 @@ private fun InfoPanel(detail: CrateDetail, owners: List<Owner>, snackbar: Snackb
                     text = label,
                     supporting = url.removePrefix("https://").removePrefix("http://").removeSuffix("/"),
                     leading = { Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant) },
-                    onClick = { uriHandler.openUri(url) },
+                    onClick = { uriHandler.openWeb(url) },
                 )
             }
         }

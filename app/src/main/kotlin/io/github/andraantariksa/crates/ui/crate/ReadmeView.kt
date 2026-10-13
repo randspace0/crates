@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.viewinterop.AndroidView
+import io.github.andraantariksa.crates.ui.openWeb
 
 /** Renders the README HTML crates.io pre-generates, styled with the app theme. */
 @Composable
@@ -51,7 +52,7 @@ fun ReadmeView(html: String, baseUrl: String) {
                     override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                         val url = request.url.toString()
                         if (url.startsWith("$baseUrl#")) return false // in-page anchor
-                        uriHandler.openUri(url)
+                        uriHandler.openWeb(url)
                         return true
                     }
                 }

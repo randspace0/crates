@@ -13,7 +13,9 @@ import io.github.andraantariksa.crates.ui.Load
 import io.github.andraantariksa.crates.ui.load
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class CrateViewModel(handle: SavedStateHandle, private val api: CratesApi) : ViewModel() {
     val name = handle.toRoute<CrateRoute>().name
@@ -31,13 +33,18 @@ class CrateViewModel(handle: SavedStateHandle, private val api: CratesApi) : Vie
     private val _owners = MutableStateFlow<List<Owner>>(emptyList())
     val owners = _owners.asStateFlow()
 
+    private var job: Job? = null
+
     init {
         reload()
     }
 
     fun reload() {
+        job?.cancel() // a slow earlier attempt must not overwrite this one
         _detail.value = Load.Loading
-        viewModelScope.launch {
+        _readme.value = Load.Loading
+        _dependencies.value = Load.Loading
+        job = viewModelScope.launch {
             val detail = load { api.crate(name) }
             _detail.value = detail
             if (detail !is Load.Ready) return@launch
@@ -45,7 +52,11 @@ class CrateViewModel(handle: SavedStateHandle, private val api: CratesApi) : Vie
             launch {
                 _readme.value = load {
                     val response = api.readme(name, version)
-                    if (response.isSuccessful) response.body()?.string() else null
+                    when {
+                        response.isSuccessful -> response.body()?.string()
+                        response.code() == 403 || response.code() == 404 -> null // no README published
+                        else -> throw HttpException(response)
+                    }
                 }
             }
             launch { _dependencies.value = load { api.dependencies(name, version).dependencies } }

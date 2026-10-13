@@ -57,7 +57,9 @@ import io.github.andraantariksa.crates.ui.ErrorBox
 import io.github.andraantariksa.crates.ui.LoadingBox
 import io.github.andraantariksa.crates.ui.MessageBox
 import io.github.andraantariksa.crates.ui.SearchRoute
+import io.github.andraantariksa.crates.ui.Load
 import io.github.andraantariksa.crates.ui.formatCount
+import io.github.andraantariksa.crates.ui.load
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -104,17 +106,18 @@ class SearchViewModel(handle: SavedStateHandle, private val api: CratesApi) : Vi
         job?.cancel()
         _state.value = SearchState()
         job = viewModelScope.launch {
-            runCatching {
+            val result = load {
                 api.crates(
                     query = _query.value.ifBlank { null },
                     keyword = route.keyword,
                     category = route.category,
                     sort = _sort.value.api,
                 )
-            }.onSuccess { page ->
-                _state.value = SearchState(page.crates, page.meta.total, page.meta.nextPage, loading = false)
-            }.onFailure { e ->
-                _state.value = SearchState(loading = false, error = e)
+            }
+            _state.value = when (result) {
+                is Load.Ready -> SearchState(result.data.crates, result.data.meta.total, result.data.meta.nextPage, loading = false)
+                is Load.Failed -> SearchState(loading = false, error = result.error)
+                Load.Loading -> return@launch
             }
         }
     }
@@ -124,13 +127,13 @@ class SearchViewModel(handle: SavedStateHandle, private val api: CratesApi) : Vi
         if (_state.value.loading) return
         _state.update { it.copy(loading = true, error = null) }
         job = viewModelScope.launch {
-            runCatching { api.cratesPage("v1/crates$next") }
-                .onSuccess { page ->
-                    _state.update {
-                        it.copy(crates = it.crates + page.crates, nextPage = page.meta.nextPage, loading = false, error = null)
-                    }
+            when (val result = load { api.cratesPage("v1/crates$next") }) {
+                is Load.Ready -> _state.update {
+                    it.copy(crates = it.crates + result.data.crates, nextPage = result.data.meta.nextPage, loading = false)
                 }
-                .onFailure { e -> _state.update { it.copy(loading = false, error = e) } }
+                is Load.Failed -> _state.update { it.copy(loading = false, error = result.error) }
+                Load.Loading -> Unit
+            }
         }
     }
 }
