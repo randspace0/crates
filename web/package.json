@@ -1,0 +1,19 @@
+{
+  "name": "crates-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "deploy": "nuxt generate && wrangler deploy"
+  },
+  "dependencies": {
+    "marked": "^18.1.1",
+    "nuxt": "^4.6.1",
+    "vue": "^3.5.43",
+    "vue-router": "^5.4.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.149.0"
+  }
+}
