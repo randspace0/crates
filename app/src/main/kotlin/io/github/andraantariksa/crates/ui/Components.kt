@@ -83,7 +83,8 @@ fun CrateRow(
                 }
             }
             when (stat) {
-                CrateStat.Version -> StatText(null, crate.version)
+                // Build metadata like 0.83.0+091b00fdd2a838c5 would squeeze the description.
+                CrateStat.Version -> StatText(null, crate.version, Modifier.widthIn(max = 96.dp))
                 CrateStat.Downloads -> StatText(Icons.Outlined.Download, formatCompact(crate.downloads))
                 CrateStat.RecentDownloads ->
                     StatText(Icons.Outlined.Download, formatCompact(crate.recentDownloads ?: 0))
@@ -123,12 +124,22 @@ fun CrateCard(crate: Crate, onClick: () -> Unit, modifier: Modifier = Modifier) 
 }
 
 @Composable
-fun StatText(icon: ImageVector?, text: String) {
-    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+fun StatText(icon: ImageVector?, text: String, modifier: Modifier = Modifier) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier,
+    ) {
         icon?.let {
             Icon(it, contentDescription = null, Modifier.size(16.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Text(text, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            text,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
     }
 }
 
